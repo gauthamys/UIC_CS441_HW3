@@ -9,7 +9,7 @@ object EmbeddingUtil {
     v.stripPrefix("[").stripSuffix("]").split(",").map(_.trim.toDouble)
   }
 
-  def loadEmbeddings(embeddingPath: String): (util.HashMap[String, Array[Double]], util.HashMap[Array[Double], String]) = {
+  def loadEmbeddings(embeddingPath: String): util.HashMap[String, Array[Double]] = {
     val lookup = new util.HashMap[String, Array[Double]]()
     val reverseLookup = new util.HashMap[Array[Double], String]()
     Using.resource(Source.fromFile(embeddingPath)) { source =>
@@ -24,7 +24,7 @@ object EmbeddingUtil {
       }
     }
 
-    (lookup, reverseLookup)
+    lookup
   }
 
   def candidates(outputArray: Array[Double], lookup: util.HashMap[String, Array[Double]]): String = {

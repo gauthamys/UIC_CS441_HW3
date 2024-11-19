@@ -20,8 +20,7 @@ class ModelController @Inject()(val controllerComponents: ControllerComponents) 
   private val windowSize = conf.getInt("ModelController.windowSize")
   private val sentenceLen = conf.getInt("ModelController.sentenceLen")
   private val positionalEmbeddings = computePositionalEmbedding(windowSize)
-  private val (lookup, reverseLookup) = EmbeddingUtil.loadEmbeddings("conf/embeddings.txt")
-  private val UNK = "UNK"
+  private val lookup = EmbeddingUtil.loadEmbeddings("conf/embeddings.txt")
 
   private def tokenizeAndEmbed(tokens: Array[String]): INDArray = {
     // get embedding from hw1
@@ -64,7 +63,7 @@ class ModelController @Inject()(val controllerComponents: ControllerComponents) 
 
   private def pad(tokens: Array[String]): Array[String] = {
     if (tokens.length < windowSize) {
-      val padding = Array.fill(windowSize - tokens.length)("UNK")
+      val padding = Array.fill(windowSize - tokens.length)("the")
       padding ++ tokens
     } else if (tokens.length > windowSize) {
       tokens.takeRight(windowSize)
@@ -83,14 +82,27 @@ class ModelController @Inject()(val controllerComponents: ControllerComponents) 
           case Some(prompt) =>
             modelTry match {
               case Success(model) =>
-                // Get the output from the model
-                val input = pad(StrUtil.cleanLine(prompt).split(" "))
-                val testInput = createPositionalEmbedding(input)
+                // Initialize the sentence with the input prompt
+                // Generate words until the target sentence length is reached
+                var i = 0
+                var res = ""
+                while (i < sentenceLen) {
+                  val currentSentence = pad(StrUtil.cleanLine(prompt).split(" "))
+                  // Create positional embeddings for the current sentence
+                  val testInput = createPositionalEmbedding(currentSentence)
 
-                val output = model.output(testInput.reshape(1, windowSize, 100))
-                val result = EmbeddingUtil.candidates(Nd4j.toFlattened(output).toDoubleVector, lookup)
+                  // Get the output from the model
+                  val output = model.output(testInput.reshape(1, windowSize, 100))
+                  val nextWord = EmbeddingUtil.candidates(Nd4j.toFlattened(output).toDoubleVector, lookup)
 
-                Ok(Json.obj("result" -> result))
+                  // Append the generated word to the current sentence
+                  res = s"$res $nextWord"
+                  currentSentence :+ nextWord
+                  i += 1
+                }
+
+                // Return the generated sentence as a response
+                Ok(Json.obj("result" -> res))
 
               case Failure(exception) =>
                 InternalServerError(Json.obj("error" -> s"Failed to load model: ${exception.getMessage}"))
@@ -102,5 +114,6 @@ class ModelController @Inject()(val controllerComponents: ControllerComponents) 
         BadRequest(Json.obj("error" -> "Invalid JSON in request body"))
     }
   }
+
 
 }
