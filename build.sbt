@@ -18,17 +18,8 @@ libraryDependencies ++= Seq(
   "org.deeplearning4j" % "deeplearning4j-zoo" % "1.0.0-M2.1",
   "org.deeplearning4j" % "deeplearning4j-modelimport" % "1.0.0-M2.1",
   "io.github.ollama4j" % "ollama4j" % "1.0.79",
-  "com.typesafe.play" %% "play-ahc-ws" % "2.9.4",
 
   "org.nd4j" % "nd4j-native" % "1.0.0-M2.1",
   "org.nd4j" % "nd4j-native-platform" % "1.0.0-M2.1",
 )
 dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.14.2"
-assembly / assemblyMergeStrategy := {
-  case PathList("META-INF", _ @ xs_*) => MergeStrategy.discard
-  case PathList("META-INF", "services", _ @ xs_*) => MergeStrategy.concat
-  case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
-  case "reference.conf" => MergeStrategy.concat
-  case _ => MergeStrategy.first
-}
-assembly / assemblyJarName := "hw3.jar"
