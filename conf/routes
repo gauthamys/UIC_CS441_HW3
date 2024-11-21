@@ -3,8 +3,10 @@
 # https://www.playframework.com/documentation/latest/ScalaRouting
 # ~~~~
 
-POST    /modelLocal     controllers.ModelController.generateLocalModel
+POST    /modelLocal         controllers.ModelController.generateLocalModel
 
-POST    /modelExternal  controllers.ModelController.generateExternalModel
+POST    /modelExternal      controllers.ModelController.generateExternalModel
 
-GET     /health         controllers.HealthController.health
+GET     /health             controllers.HealthController.health
+
+POST    /conversation       controllers.AgentController.converse

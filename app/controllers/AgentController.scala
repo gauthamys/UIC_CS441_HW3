@@ -1,10 +1,17 @@
 package controllers
 
 import com.typesafe.config.ConfigFactory
+import io.github.ollama4j.OllamaAPI
+import io.github.ollama4j.utils.Options
 import org.slf4j.LoggerFactory
 import play.api.mvc.{Action, AnyContent, BaseController, ControllerComponents}
+import play.api.libs.json.{JsValue, Json}
+import service.ModelService
 
+import java.time.Instant
 import javax.inject.Inject
+import java.util
+import scala.collection.mutable.ArrayBuffer
 
 class AgentController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
   private val conf = ConfigFactory.load()
@@ -13,7 +20,34 @@ class AgentController @Inject()(val controllerComponents: ControllerComponents) 
   private val model = conf.getString("Ollama.model")
   private val logger = LoggerFactory.getLogger(this.getClass.getName)
 
-  def converse(seed: String): Action[AnyContent] = Action { implicit request =>
-    Ok
+  def converse: Action[AnyContent] = Action { implicit request =>
+    val content = request.body
+    val jsonObject: Option[JsValue] = content.asJson
+
+    jsonObject match {
+      case Some(json) =>
+        (json \ "prompt").asOpt[String] match {
+          case Some(seed) =>
+            val ollamaApi = new OllamaAPI(host)
+            ollamaApi.setRequestTimeoutSeconds(timeout)
+            val prompt = s"how can you respond to the statement: $seed"
+            val duration = 0.5 * 60
+            val startTime = Instant.now().getEpochSecond
+            val res = new ArrayBuffer[String]()
+            res.addOne(seed)
+            while((Instant.now().getEpochSecond - startTime) < duration) {
+              var inter = ModelService.generateExternal(prompt)
+              res.addOne(inter)
+              inter = ollamaApi.generate(model, inter, false, new Options(new util.HashMap[String, Object])).getResponse
+              res.addOne(inter)
+            }
+            Ok(Json.obj("result" -> res))
+
+          case None =>
+            BadRequest(Json.obj("error" -> "Missing 'prompt' in request body"))
+        }
+      case None =>
+        BadRequest(Json.obj("error" -> "Invalid JSON in request body"))
+    }
   }
 }
