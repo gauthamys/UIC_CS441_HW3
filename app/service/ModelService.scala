@@ -1,20 +1,21 @@
-package utilz
+package service
 
 import com.typesafe.config.ConfigFactory
-import io.github.ollama4j.OllamaAPI
-import io.github.ollama4j.utils.Options
+import io.circe.generic.decoding.DerivedDecoder.deriveDecoder
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork
 import org.deeplearning4j.util.ModelSerializer
 import org.nd4j.linalg.api.ndarray.INDArray
 import org.nd4j.linalg.factory.Nd4j
-import org.slf4j.LoggerFactory
+import utilz.{EmbeddingUtil, StrUtil}
+import sttp.client3._
+import io.circe.parser._
+import io.circe.syntax.EncoderOps
 
-import java.util
 import scala.collection.convert.ImplicitConversions.`map AsScala`
 import scala.collection.mutable.ListBuffer
 import scala.util.{Success, Try}
 
-object ModelUtil {
+object ModelService {
   private val modelPath = "conf/model.zip"
   private val modelTry: Try[MultiLayerNetwork] = Try(ModelSerializer.restoreMultiLayerNetwork(modelPath))
   private val conf = ConfigFactory.load()
@@ -22,9 +23,7 @@ object ModelUtil {
   private val sentenceLen = conf.getInt("ModelController.sentenceLen")
   private val positionalEmbeddings = computePositionalEmbedding(windowSize)
   private val lookup = EmbeddingUtil.loadEmbeddings("conf/embeddings.txt")
-  private val host = conf.getString("Ollama.host")
-  private val timeout = conf.getInt("Ollama.request-timeout-seconds")
-  private val model = conf.getString("Ollama.model")
+  private val AWSHost = conf.getString("AWS.host")
 
   private def tokenizeAndEmbed(tokens: Array[String]): INDArray = {
     // get embedding from hw1
@@ -103,10 +102,40 @@ object ModelUtil {
     }
   }
   def generateExternal(prompt: String): String = {
-    val ollamaAPI = new OllamaAPI(host)
-    ollamaAPI.setRequestTimeoutSeconds(timeout)
-    val generateNextQueryPrompt = s"how can you respond to the statement: $prompt"
-    val result = ollamaAPI.generate(model, generateNextQueryPrompt, false, new Options(new util.HashMap[String, Object]))
-    result.getResponse
+    // HTTP client setup
+    val backend = HttpClientSyncBackend()
+    val requestBody: String = Map("prompt" -> prompt).asJson.noSpaces
+    val request = basicRequest
+      .post(uri"$AWSHost")
+      .body(requestBody) // JSON body
+      .contentType("application/json")
+
+    // Execute the request and handle the response
+    val response = request.send(backend)
+    response.body match {
+      case Right(jsonString) =>
+        // Parse the JSON response
+        parse(jsonString) match {
+          case Right(json) =>
+            json.hcursor.get[String]("body") match {
+              case Right(bodyJson) =>
+                 parse(bodyJson) match {
+                  case Right(body) =>
+                    body.hcursor.get[Array[Map[String, String]]]("content") match {
+                      case Right(content) => content(0).getOrElse("text", "")
+                      case Left(error) => error.toString()
+                    }
+                  case Left(error) =>
+                    s"Error getting content from body: ${error}"
+                }
+              case Left(error)
+                => s"Error parsing 'content': ${error.getMessage}"
+            }
+          case Left(error) =>
+            s"Error parsing JSON: ${error.getMessage}"
+        }
+      case Left(error) =>
+        s"HTTP request failed: ${error}"
+    }
   }
 }

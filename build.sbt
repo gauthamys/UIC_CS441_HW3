@@ -18,6 +18,10 @@ libraryDependencies ++= Seq(
   "org.deeplearning4j" % "deeplearning4j-zoo" % "1.0.0-M2.1",
   "org.deeplearning4j" % "deeplearning4j-modelimport" % "1.0.0-M2.1",
   "io.github.ollama4j" % "ollama4j" % "1.0.79",
+  "com.softwaremill.sttp.client3" %% "core" % "3.9.7",
+  "io.circe" %% "circe-core" % "0.15.0-M1",
+  "io.circe" %% "circe-generic" % "0.15.0-M1",
+  "io.circe" %% "circe-parser" % "0.15.0-M1",
 
   "org.nd4j" % "nd4j-native" % "1.0.0-M2.1",
   "org.nd4j" % "nd4j-native-platform" % "1.0.0-M2.1",
