@@ -35,11 +35,15 @@ class AgentController @Inject()(val controllerComponents: ControllerComponents) 
             val startTime = Instant.now().getEpochSecond
             val res = new ArrayBuffer[String]()
             res.addOne(seed)
-            while((Instant.now().getEpochSecond - startTime) < duration) {
-              var inter = ModelService.generateExternal(prompt)
+            var i = 0
+            var inter = prompt
+            while(i < 2) {
+              Thread.sleep(20 * 1000)
+              inter = ModelService.generateExternal(inter)
               res.addOne(inter)
               inter = ollamaApi.generate(model, inter, false, new Options(new util.HashMap[String, Object])).getResponse
               res.addOne(inter)
+              i = i + 1
             }
             Ok(Json.obj("result" -> res))
 

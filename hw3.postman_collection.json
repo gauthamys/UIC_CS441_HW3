@@ -1,0 +1,64 @@
+{
+	"info": {
+		"_postman_id": "ac635d9c-c36e-46e2-a98b-f066ca2d1b01",
+		"name": "hw3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "13332651"
+	},
+	"item": [
+		{
+			"name": "conversation agent",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prompt\": \"how does a cat express love?\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:9000/conversation"
+			},
+			"response": []
+		},
+		{
+			"name": "local model",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prompt\": \"how does a cat express love?\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:9000/modelLocal"
+			},
+			"response": []
+		},
+		{
+			"name": "aws model",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"prompt\": \"how does a cat express love?\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "localhost:9000/modelExternal"
+			},
+			"response": []
+		}
+	]
+}
