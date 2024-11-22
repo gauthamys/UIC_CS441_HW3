@@ -32,6 +32,12 @@ The deployed API Gateway connected to Lambda that is invoking a bedrock runtime 
 ```angular2html
 https://5lz5bv3g1h.execute-api.us-east-2.amazonaws.com/prod/hw3
 ```
+you can run the following curl command to test it
+```angular2html
+curl -X POST https://5lz5bv3g1h.execute-api.us-east-2.amazonaws.com/prod/hw3 \
+    -H "Content-Type: application/json" \
+    -d '{"prompt": "<your_prompt_here>"}'
+```
 ## Test Suite
 Test cases can be found in the `test` folder, to run tests, run
 ```angular2html
