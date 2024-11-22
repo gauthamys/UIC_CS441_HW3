@@ -59,6 +59,15 @@
 				"url": "localhost:9000/modelExternal"
 			},
 			"response": []
+		},
+		{
+			"name": "health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "localhost:9000/health"
+			},
+			"response": []
 		}
 	]
 }
