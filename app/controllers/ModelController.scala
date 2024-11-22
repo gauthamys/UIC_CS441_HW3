@@ -42,5 +42,4 @@ class ModelController @Inject()(val controllerComponents: ControllerComponents) 
     }
   }
 
-
 }
