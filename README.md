@@ -20,13 +20,13 @@ Video Link:
 4. Deeplearning4j
 
 ## Configuration
-1. Bedrock Model - Anthropic Claude 3.5 Sonnet
+1. AWS Bedrock Model - Anthropic Claude 3.5 Sonnet
 2. Local Ollama server - Ollama 3.2
 3. Conversation Reply Count - 5 messages
 4. Local Model Output sentence length - 10 words
 
 ## Data Flow and Logic
-
+![diagram.png](images/diagram.png)
 ## AWS Deployment
 The deployed API Gateway connected to Lambda that is invoking a bedrock runtime is accessible at - 
 ```angular2html
@@ -38,6 +38,7 @@ curl -X POST https://5lz5bv3g1h.execute-api.us-east-2.amazonaws.com/prod/hw3 \
     -H "Content-Type: application/json" \
     -d '{"prompt": "<your_prompt_here>"}'
 ```
+and the lambda function can be found in `lambda_function.py`
 ## Test Suite
 Test cases can be found in the `test` folder, to run tests, run
 ```angular2html
