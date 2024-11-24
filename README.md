@@ -26,7 +26,7 @@ Video Link:
 4. Local Model Output sentence length - 10 words
 
 ## Data Flow and Logic
-![diagram.png](images/diagram.png)
+<img src="images/diagram.png" alt="diagram" width="80%"></img>
 ## AWS Deployment
 The deployed API Gateway connected to Lambda that is invoking a bedrock runtime is accessible at - 
 ```angular2html
