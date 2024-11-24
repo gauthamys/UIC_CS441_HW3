@@ -45,6 +45,7 @@ Test cases can be found in the `test` folder, to run tests, run
 sbt test
 ```
 ## Results
+You can generate the results of the conversation with Ollama through the api endpoint `localhost:9000/conversation` in the postman collection after running the app.
 
 ## Usage
 Clone this repository, and
