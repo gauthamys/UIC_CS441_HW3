@@ -45,7 +45,12 @@ Test cases can be found in the `test` folder, to run tests, run
 sbt test
 ```
 ## Results
-You can generate the results of the conversation with Ollama through the api endpoint `localhost:9000/conversation` in the postman collection after running the app.
+You can generate the results of the conversation by running 
+```
+sbt "runMain agent.ConversationalAgent '<your-prompt-here>'"
+```
+This should record the conversation and write it to `results/conversation.txt`, a sample conversation
+with the prompt "what do you think about the soviet union" has been recorded.
 
 ## Usage
 Clone this repository, and
@@ -68,7 +73,7 @@ POST /modelLocal        Call the local trained model (only outputs one word)
 POST /modelExternal     Call the AWS bedrock model
 ```
 5. To run the conversation agent,
-```angular2html
+```
 sbt "runMain agent.ConversationalAgent '<your-prompt-here>'"
 ```
 This takes 5-6 min to run and generate the results in `results/conversation.txt`
