@@ -51,9 +51,9 @@ You can generate the results of the conversation with Ollama through the api end
 Clone this repository, and
 1. Make sure Ollama server is running
 ```angular2html
-ollama run llama3.2
+ollama serve
 ```
-2. Install dependencies
+2. Open a new and Install dependencies
 ```angular2html
 sbt update
 ```
