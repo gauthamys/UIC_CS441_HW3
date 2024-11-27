@@ -8,5 +8,3 @@ POST    /modelLocal         controllers.ModelController.generateLocalModel
 POST    /modelExternal      controllers.ModelController.generateExternalModel
 
 GET     /health             controllers.HealthController.health
-
-POST    /conversation       controllers.AgentController.converse

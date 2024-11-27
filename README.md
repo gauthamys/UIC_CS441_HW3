@@ -53,9 +53,9 @@ Clone this repository, and
 ```angular2html
 ollama serve
 ```
-2. Open a new and Install dependencies
+2. Open a new terminal, compile protobuf classes and Install dependencies
 ```angular2html
-sbt update
+sbt clean compile update
 ```
 3. Run the Play application
 ```angular2html
@@ -66,5 +66,9 @@ sbt run
 GET  /health
 POST /modelLocal
 POST /modelExternal
-POST /converse
 ```
+5. To run the conversation agent,
+```angular2html
+sbt "runMain agent.ConversationalAgent '<your-prompt-here>'"
+```
+This takes 5-6 min to run and generate the results in `results/conversation.txt`
