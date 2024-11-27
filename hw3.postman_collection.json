@@ -7,24 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "conversation agent",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"prompt\": \"how does a cat express love?\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "localhost:9000/conversation"
-			},
-			"response": []
-		},
-		{
 			"name": "local model",
 			"request": {
 				"method": "POST",
