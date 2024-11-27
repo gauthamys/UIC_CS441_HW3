@@ -63,9 +63,9 @@ sbt run
 ```
 4. Import the postman collection found in `hw3.postman_collection.json` and test out the endpoints in postman.
 ```angular2html
-GET  /health
-POST /modelLocal
-POST /modelExternal
+GET  /health            Health check endpoint
+POST /modelLocal        Call the local trained model (only outputs one word)
+POST /modelExternal     Call the AWS bedrock model
 ```
 5. To run the conversation agent,
 ```angular2html
