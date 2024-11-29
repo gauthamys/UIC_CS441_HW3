@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package protobuf;
+
+// Define the request and response messages
+message GenerateExternalRequest {
+  string prompt = 1;
+}
+
+message GenerateExternalResponse {
+  string result = 1;
+}

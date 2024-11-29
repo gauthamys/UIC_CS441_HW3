@@ -30,14 +30,21 @@ libraryDependencies ++= Seq(
   "io.grpc" % "grpc-stub" % "1.64.0",
   "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % "0.11.17",
   "com.typesafe.akka" %% "akka-stream" % "2.6.20",
+  "com.typesafe.play" %% "play-ws" % "2.9.5",
 
   "org.nd4j" % "nd4j-native" % "1.0.0-M2.1",
   "org.nd4j" % "nd4j-native-platform" % "1.0.0-M2.1",
 )
 dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.14.2"
 
-Compile / PB.targets := Seq(
-  scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
-)
+//Compile / PB.targets := Seq(
+//  scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
+//)
+//
+//Compile / PB.protoSources += file("app/protobuf")
 
-Compile / PB.protoSources += file("app/protobuf")
+Compile / PB.protoSources := Seq(file("app/protobuf"))
+
+Compile / PB.targets := Seq(
+  scalapb.gen() -> (Compile / sourceManaged).value
+)
