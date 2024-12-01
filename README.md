@@ -11,7 +11,7 @@ Amazon Bedrock and AWS Lambda to expose a foundational LLM base model over AWS A
 Additionally, an api endpoint is exposed to make the AWS bedrock model converse with a local Ollama
 model and record the conversation.
 
-Video Link: 
+Video Link: https://youtu.be/BzAkQEaV7lU
 
 ## Frameworks
 1. Scala 2.13
